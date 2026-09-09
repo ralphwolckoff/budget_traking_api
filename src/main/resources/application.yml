@@ -1,0 +1,31 @@
+server:
+  port: ${PORT:3001}
+
+spring:
+  datasource:
+    # ⚠️ Format JDBC, différent de l'URL Prisma !
+    # Prisma : postgresql://user:pass@host:port/db
+    # Spring : jdbc:postgresql://host:port/db  (user/pass séparés)
+    url: ${DATABASE_URL:jdbc:postgresql://localhost:5432/budget}
+    username: ${DATABASE_USERNAME:postgres}
+    password: ${DATABASE_PASSWORD:postgres}
+  jpa:
+    hibernate:
+      # 'update' pratique en dev, mais à remplacer par Flyway/Liquibase + 'validate' avant la prod
+      ddl-auto: update
+    show-sql: false
+    properties:
+      hibernate:
+        format_sql: true
+
+app:
+  jwt:
+    # OBLIGATOIRE — aucune valeur par défaut (contrairement au fallback dangereux du backend Node).
+    # Génère un secret fort avec : openssl rand -base64 32
+    secret: ${JWT_SECRET:}
+  cors:
+    allowed-origins: ${ALLOWED_ORIGINS:http://localhost:5173,http://localhost:5174,http://localhost:5175,http://localhost:5176,http://localhost:4173}
+
+logging:
+  level:
+    org.springframework.security: ${SECURITY_LOG_LEVEL:WARN}
